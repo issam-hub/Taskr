@@ -1,0 +1,99 @@
+Feb 23 14:17:38 archlinux systemd[1]: Starting PostgreSQL database server...
+░░ Subject: A start job for unit postgresql.service has begun execution
+░░ Defined-By: systemd
+░░ Support: https://lists.freedesktop.org/mailman/listinfo/systemd-devel
+░░ 
+░░ A start job for unit postgresql.service has begun execution.
+░░ 
+░░ The job identifier is 3471.
+Feb 23 14:17:38 archlinux postgres[123491]: "/var/lib/postgres/data" is missing or empty. Use a command like
+Feb 23 14:17:38 archlinux postgres[123491]:   su -l postgres -c "initdb --locale=C.UTF-8 --encoding=UTF8 -D '/var/lib/postgres/data'"
+Feb 23 14:17:38 archlinux postgres[123491]: with relevant options, to initialize the database cluster.
+Feb 23 14:17:38 archlinux systemd[1]: postgresql.service: Control process exited, code=exited, status=1/FAILURE
+░░ Subject: Unit process exited
+░░ Defined-By: systemd
+░░ Support: https://lists.freedesktop.org/mailman/listinfo/systemd-devel
+░░ 
+░░ An ExecStartPre= process belonging to unit postgresql.service has exited.
+░░ 
+░░ The process' exit code is 'exited' and its exit status is 1.
+Feb 23 14:17:38 archlinux systemd[1]: postgresql.service: Failed with result 'exit-code'.
+░░ Subject: Unit failed
+░░ Defined-By: systemd
+░░ Support: https://lists.freedesktop.org/mailman/listinfo/systemd-devel
+░░ 
+░░ The unit postgresql.service has entered the 'failed' state with result 'exit-code'.
+Feb 23 14:17:38 archlinux systemd[1]: Failed to start PostgreSQL database server.
+░░ Subject: A start job for unit postgresql.service has failed
+░░ Defined-By: systemd
+░░ Support: https://lists.freedesktop.org/mailman/listinfo/systemd-devel
+░░ 
+░░ A start job for unit postgresql.service has finished with a failure.
+░░ 
+░░ The job identifier is 3471 and the job result is failed.
+Feb 23 14:17:55 archlinux systemd[1]: Starting PostgreSQL database server...
+░░ Subject: A start job for unit postgresql.service has begun execution
+░░ Defined-By: systemd
+░░ Support: https://lists.freedesktop.org/mailman/listinfo/systemd-devel
+░░ 
+░░ A start job for unit postgresql.service has begun execution.
+░░ 
+░░ The job identifier is 3580.
+Feb 23 14:17:55 archlinux postgres[123857]: "/var/lib/postgres/data" is missing or empty. Use a command like
+Feb 23 14:17:55 archlinux postgres[123857]:   su -l postgres -c "initdb --locale=C.UTF-8 --encoding=UTF8 -D '/var/lib/postgres/data'"
+Feb 23 14:17:55 archlinux postgres[123857]: with relevant options, to initialize the database cluster.
+Feb 23 14:17:55 archlinux systemd[1]: postgresql.service: Control process exited, code=exited, status=1/FAILURE
+░░ Subject: Unit process exited
+░░ Defined-By: systemd
+░░ Support: https://lists.freedesktop.org/mailman/listinfo/systemd-devel
+░░ 
+░░ An ExecStartPre= process belonging to unit postgresql.service has exited.
+░░ 
+░░ The process' exit code is 'exited' and its exit status is 1.
+Feb 23 14:17:55 archlinux systemd[1]: postgresql.service: Failed with result 'exit-code'.
+░░ Subject: Unit failed
+░░ Defined-By: systemd
+░░ Support: https://lists.freedesktop.org/mailman/listinfo/systemd-devel
+░░ 
+░░ The unit postgresql.service has entered the 'failed' state with result 'exit-code'.
+Feb 23 14:17:55 archlinux systemd[1]: Failed to start PostgreSQL database server.
+░░ Subject: A start job for unit postgresql.service has failed
+░░ Defined-By: systemd
+░░ Support: https://lists.freedesktop.org/mailman/listinfo/systemd-devel
+░░ 
+░░ A start job for unit postgresql.service has finished with a failure.
+░░ 
+░░ The job identifier is 3580 and the job result is failed.
+Feb 23 14:18:07 archlinux systemd[1]: Starting PostgreSQL database server...
+░░ Subject: A start job for unit postgresql.service has begun execution
+░░ Defined-By: systemd
+░░ Support: https://lists.freedesktop.org/mailman/listinfo/systemd-devel
+░░ 
+░░ A start job for unit postgresql.service has begun execution.
+░░ 
+░░ The job identifier is 3689.
+Feb 23 14:18:07 archlinux postgres[124083]: "/var/lib/postgres/data" is missing or empty. Use a command like
+Feb 23 14:18:07 archlinux postgres[124083]:   su -l postgres -c "initdb --locale=C.UTF-8 --encoding=UTF8 -D '/var/lib/postgres/data'"
+Feb 23 14:18:07 archlinux postgres[124083]: with relevant options, to initialize the database cluster.
+Feb 23 14:18:07 archlinux systemd[1]: postgresql.service: Control process exited, code=exited, status=1/FAILURE
+░░ Subject: Unit process exited
+░░ Defined-By: systemd
+░░ Support: https://lists.freedesktop.org/mailman/listinfo/systemd-devel
+░░ 
+░░ An ExecStartPre= process belonging to unit postgresql.service has exited.
+░░ 
+░░ The process' exit code is 'exited' and its exit status is 1.
+Feb 23 14:18:07 archlinux systemd[1]: postgresql.service: Failed with result 'exit-code'.
+░░ Subject: Unit failed
+░░ Defined-By: systemd
+░░ Support: https://lists.freedesktop.org/mailman/listinfo/systemd-devel
+░░ 
+░░ The unit postgresql.service has entered the 'failed' state with result 'exit-code'.
+Feb 23 14:18:07 archlinux systemd[1]: Failed to start PostgreSQL database server.
+░░ Subject: A start job for unit postgresql.service has failed
+░░ Defined-By: systemd
+░░ Support: https://lists.freedesktop.org/mailman/listinfo/systemd-devel
+░░ 
+░░ A start job for unit postgresql.service has finished with a failure.
+░░ 
+░░ The job identifier is 3689 and the job result is failed.

@@ -2,7 +2,6 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    "rootDir": "./src",
     "outDir": "./dist",
     "experimentalDecorators": true,
     "preserveConstEnums": true,
@@ -44,6 +43,7 @@
     "skipLibCheck": true,
 
     "esModuleInterop": true,
+    "emitDecoratorMetadata": true 
     
   },
   "include": ["src/**/*.ts", "src/**/*.json"],
