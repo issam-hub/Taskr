@@ -1,10 +1,10 @@
 import type { Express } from "express";
-import { TaskController } from "./controller.js";
+import { CommentController } from "./controller.js";
 
-export class TaskRoutes {
-    private basePoint = '/api/tasks';
+export class CommentRoutes {
+    private basePoint = '/api/comments';
     constructor(app: Express){
-        const controller = new TaskController();
+        const controller = new CommentController();
 
         app.route(this.basePoint)
         .post(controller.addHandler)

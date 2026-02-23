@@ -3,17 +3,16 @@
   "version": "1.0.0",
   "description": "Taskr Project Management System",
   "keywords": [
-    "project",
-    "management",
+    "project management",
     "backend"
   ],
   "license": "ISC",
   "author": "",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon dist/src/main.js"
+    "start": "nodemon dist/main.js"
   },
   "dependencies": {
     "express": "^5.2.1",

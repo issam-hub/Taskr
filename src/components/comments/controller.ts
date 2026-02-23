@@ -1,4 +1,4 @@
-export class TaskController {
+export class CommentController {
   public addHandler() {
     // addHandler
   }

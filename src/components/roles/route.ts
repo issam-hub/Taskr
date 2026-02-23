@@ -1,10 +1,10 @@
 import type { Express } from "express";
-import { TaskController } from "./controller.js";
+import { RoleController } from "./controller.js";
 
-export class TaskRoutes {
-    private basePoint = '/api/tasks';
+export class RoleRoutes {
+    private basePoint = '/api/roles';
     constructor(app: Express){
-        const controller = new TaskController();
+        const controller = new RoleController();
 
         app.route(this.basePoint)
         .post(controller.addHandler)
