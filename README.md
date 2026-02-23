@@ -13,12 +13,7 @@ npm install
 
 ## Configuration
 
-- create .env file in the root directory and save it. Inside that file, add the desired configuration values in the format KEY=VALUE.
-- Configuration Options
-
-| Configuration Key | Description                          |
-| ----------------- | ------------------------------------ |
-| PORT              | The port number on which project run |
+- create .env file in the root directory and save it. Inside that file, add the desired configuration values in the format KEY=VALUE (follow .env.example)
 
 ## Compile Project
 
