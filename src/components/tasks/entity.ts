@@ -30,15 +30,15 @@ export class Tasks {
   @Column({ length: 500 })
   description: string;
 
-  @Column()
-  @ManyToOne(() => Projects, (projectData) => projectData.project_id)
+  @Column({ nullable: false })
+  @ManyToOne(() => Projects)
   @JoinColumn({ name: "project_id" })
-  project_id: string;
+  project_id: Projects["project_id"];
 
-  @Column()
-  @ManyToOne(() => Users, (userData) => userData.user_id)
+  @Column({ nullable: false })
+  @ManyToOne(() => Users)
   @JoinColumn({ name: "user_id" })
-  user_id: string;
+  user_id: Users["user_id"];
 
   @Column()
   estimated_start_time: Date;
@@ -54,7 +54,7 @@ export class Tasks {
 
   @Column({
     type: "enum",
-    enum: Priority, 
+    enum: Priority,
     default: Priority.Low,
   })
   priority: Priority;

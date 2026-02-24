@@ -1,11 +1,13 @@
-export class CommentController {
+import { BaseController } from "../../utils/base_controller.js";
+
+export class CommentController extends BaseController {
   public addHandler() {
     // addHandler
   }
   public getAllHandler() {
     // getAllHandler
   }
-  public getDetailsHandler() {
+  public getOneHandler() {
     // getDetailsHandler
   }
   public async updateHandler() {
