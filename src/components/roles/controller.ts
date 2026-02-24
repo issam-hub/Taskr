@@ -1,11 +1,13 @@
-export class RoleController {
+import { BaseController } from "../../utils/base_controller.js";
+
+export class RoleController extends BaseController {
   public addHandler() {
     // addHandler
   }
   public getAllHandler() {
     // getAllHandler
   }
-  public getDetailsHandler() {
+  public getOneHandler() {
     // getDetailsHandler
   }
   public async updateHandler() {
