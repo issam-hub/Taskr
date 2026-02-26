@@ -12,10 +12,12 @@
   "main": "dist/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon dist/main.js"
+    "build": "tsc",
+    "start": "npm run build && nodemon"
   },
   "dependencies": {
     "express": "^5.2.1",
+    "express-validator": "^7.3.1",
     "pg": "^8.18.0",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.28",

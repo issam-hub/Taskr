@@ -96,9 +96,9 @@ export class BaseService<T extends ObjectLiteral> {
     try {
       let data: T[] = [];
       if (Object.keys(queryParams).length > 0) {
-        const query = await this.repo.createQueryBuilder();
+        const query = this.repo.createQueryBuilder();
         for (const field in queryParams) {
-          if (queryParams.hasOwnProperty(field)) {
+          if (Object.hasOwn(queryParams, field)) {
             const value = queryParams[field];
             query.andWhere(`${field} = ${value}`);
           }
@@ -110,6 +110,21 @@ export class BaseService<T extends ObjectLiteral> {
       return { statusCode: 200, status: "success", data: data };
     } catch (err: any) {
       return { statusCode: 500, status: "error", message: err.message };
+    }
+  }
+
+  async delete(id: string): Promise<ApiResponse<T>> {
+    try {
+      const isExist = await this.findOne(id);
+      if (isExist.statusCode === 404) {
+        return isExist;
+      }
+
+      await this.repo.delete(id);
+
+      return { statusCode: 200, status: "success" };
+    } catch (error: any) {
+      return { statusCode: 500, status: "error", message: error.message };
     }
   }
 
@@ -126,13 +141,13 @@ export class BaseService<T extends ObjectLiteral> {
 
       // Return success response with the retrieved data
       return { statusCode: 200, status: "success", data: data };
-    } catch (error) {
+    } catch (err: any) {
       // Return error response if an exception occurs
       return {
         statusCode: 500,
         status: "error",
         data: [],
-        message: error.message,
+        message: err.message,
       };
     }
   }

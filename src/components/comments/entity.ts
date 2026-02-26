@@ -31,7 +31,7 @@ export class Comments {
 
   @CreateDateColumn()
   created_at: Date;
-  
+
   @UpdateDateColumn()
   updated_at: Date;
 }

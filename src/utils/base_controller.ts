@@ -1,3 +1,5 @@
+import type { Request, Response } from "express";
+
 export abstract class BaseController {
   public abstract addHandler(req: Request, res: Response): void;
   public abstract getAllHandler(req: Request, res: Response): void;
