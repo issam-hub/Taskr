@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { RoleController, RolesUtil } from "./controller.js";
 import { body } from "express-validator";
 import { validate } from "../../utils/validator.js";
+import { authorize, hasPermission } from "../../utils/auth_utils.js";
 
 const validateInput = [
   body("name").trim().notEmpty().withMessage("name is required"),
@@ -57,13 +58,23 @@ export class RoleRoutes {
 
     app
       .route(this.basePoint)
-      .post(validate(validateInput), controller.addHandler)
-      .get(controller.getAllHandler);
+      .all(authorize)
+      .post(
+        validate(validateInput),
+        hasPermission("add_role"),
+        controller.addHandler,
+      )
+      .get(hasPermission("get_all_roles"), controller.getAllHandler);
 
     app
       .route(this.basePoint + "/:id")
-      .delete(controller.deleteHandler)
-      .patch(validate(validateInputPatch), controller.updateHandler)
-      .get(controller.getOneHandler);
+      .all(authorize)
+      .delete(hasPermission("delete_role"), controller.deleteHandler)
+      .patch(
+        validate(validateInputPatch),
+        hasPermission("edit_role"),
+        controller.updateHandler,
+      )
+      .get(hasPermission("get_details_role"), controller.getOneHandler);
   }
 }
