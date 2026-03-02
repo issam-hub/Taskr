@@ -100,7 +100,7 @@ export class BaseService<T extends ObjectLiteral> {
         for (const field in queryParams) {
           if (Object.hasOwn(queryParams, field)) {
             const value = queryParams[field];
-            query.andWhere(`${field} = ${value}`);
+            query.andWhere(`${field} = :value`, { value });
           }
         }
         data = await query.getMany();

@@ -17,6 +17,22 @@ export class RolesUtil {
     }
     return permissions;
   }
+  public static async checkValidRoleID(role_id: string): Promise<boolean> {
+    const service = new RolesService();
+
+    const role = await service.findOne(role_id);
+
+    return !!role.data;
+  }
+
+  public static async getAllRightsFromRole(role_id: string): Promise<string[]> {
+    const service = new RolesService();
+    let rights: string[] = [];
+    const queryData = await service.findOne(role_id);
+
+    rights = [...new Set(queryData.data?.rights)];
+    return rights;
+  }
 }
 
 export class RoleController extends BaseController {

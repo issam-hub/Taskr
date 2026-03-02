@@ -1,3 +1,5 @@
+import * as bcrypt from "bcrypt";
+
 export const Rights = {
   ROLES: {
     ADD: "add_role",
@@ -39,4 +41,18 @@ export const Rights = {
     DELETE: "delete_comment",
     ALL: "add_comment,edit_comment,get_all_comments,get_details_comment,delete_comment",
   },
+};
+
+export const encryptString = async (s: string) => {
+  return await bcrypt.hash(s, 12);
+};
+
+export const bcryptCompare = async (s: string, hash: string) => {
+  return await bcrypt.compare(s, hash);
+};
+
+export const SERVER_CONST = {
+  JWTSECRET: "SKTaskr-SECRET",
+  ACCESS_TOKEN_EXPIRY_TIME_SECONDS: 1 * 8 * 60 * 60, // 8 hours
+  REFRESH_TOKEN_EXPIRY_TIME_SECONDS: 5 * 7 * 24 * 60 * 60, // one week
 };

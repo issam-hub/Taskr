@@ -14,6 +14,7 @@ if (cluster.isPrimary) {
     (async () => {
       await ConnectDatabase.getInstance();
       await DefaultUtils.addDefaultRole();
+      await DefaultUtils.addDefaultUser();
       process.exit();
     })();
   } else {
