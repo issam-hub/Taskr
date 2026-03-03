@@ -6,6 +6,7 @@ import { authorize, hasPermission } from "../../utils/auth_utils.js";
 
 const validUserInput = [
   body("username").trim().notEmpty().withMessage("username is required"),
+  body("fullname").trim().notEmpty().withMessage("fullname is required"),
   body("email").isEmail().withMessage("email should be valid"),
   body("password")
     .isLength({ min: 8, max: 16 })
@@ -31,6 +32,22 @@ const validUserInput = [
   }),
 ];
 
+const validUserInputPatch = [
+  body("fullname").optional().trim(),
+  body("role_id")
+    .optional()
+    .custom((value: string) => {
+      console.log("value: ", value);
+      const uuidPattern =
+        /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+      const isValid = uuidPattern.test(value.trim());
+      if (!isValid) {
+        throw new Error("role_id should be a valid UUID");
+      }
+      return true;
+    }),
+];
+
 export class UserRoutes {
   private basePoint = "/api/users";
   constructor(app: Express) {
@@ -50,7 +67,11 @@ export class UserRoutes {
       .route(this.basePoint + "/:id")
       .all(authorize)
       .delete(hasPermission("delete_user"), controller.deleteHandler)
-      .patch(hasPermission("edit_user"), controller.updateHandler)
+      .patch(
+        validate(validUserInputPatch),
+        hasPermission("edit_user"),
+        controller.updateHandler,
+      )
       .get(hasPermission("get_details_user"), controller.getOneHandler);
 
     app.route("/api/login").post(controller.login);
