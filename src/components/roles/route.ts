@@ -27,7 +27,7 @@ const validateInput = [
 ];
 
 const validateInputPatch = [
-  body("name").optional().trim().notEmpty().withMessage("name is required"),
+  body("name").optional().trim(),
   body("description")
     .optional()
     .isLength({ max: 200 })

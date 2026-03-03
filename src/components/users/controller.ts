@@ -55,17 +55,41 @@ export class UserController extends BaseController {
       });
     }
   }
-  public getAllHandler() {
-    // getAllHandler
+  public async getAllHandler(req: Request, res: Response) {
+    const service = new UsersService();
+    const result = await service.findAll(req.query);
+    if (result.statusCode === 200) {
+      result.data?.forEach((element) => delete (element as any).password);
+    }
+    res.status(result.statusCode as number).json(result);
   }
-  public getOneHandler() {
-    // getDetailsHandler
+  public async getOneHandler(req: Request, res: Response) {
+    const service = new UsersService();
+    const result = await service.findOne(req.params.id as string);
+    if (result.statusCode === 200) {
+      delete (result.data as any).password;
+    }
+    res.status(result.statusCode as number).json(result);
   }
-  public async updateHandler() {
-    // updateHandler
+  public async updateHandler(req: Request, res: Response) {
+    const service = new UsersService();
+    const user = req.body;
+
+    delete (user as any).username;
+    delete (user as any).email;
+    delete (user as any).password;
+
+    const result = await service.update(req.params.id as string, user);
+    if (result.statusCode === 200) {
+      delete (result.data as any).password;
+    }
+
+    res.status(result.statusCode as number).json(result);
   }
-  public async deleteHandler() {
-    // deleteHandler
+  public async deleteHandler(req: Request, res: Response) {
+    const service = new UsersService();
+    const result = await service.delete(req.params.id as string);
+    res.status(result.statusCode as number).json(result);
   }
   public async login(req: Request, res: Response) {
     const { email, password } = req.body;
