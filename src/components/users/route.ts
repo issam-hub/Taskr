@@ -48,6 +48,38 @@ const validUserInputPatch = [
     }),
 ];
 
+const validChangePassword = [
+  body("oldPassword").trim().notEmpty().withMessage("old password is required"),
+  body("newPassword")
+    .isLength({ min: 8, max: 16 })
+    .withMessage("password must be between 8 and 16 characters in length")
+    .isStrongPassword({
+      minLowercase: 1,
+      minUppercase: 1,
+      minSymbols: 1,
+      minNumbers: 1,
+    })
+    .withMessage(
+      "password should include at least one uppercase letter, one lowercase letter, one special symbol, and one numerical digit.",
+    ),
+];
+
+const validateResetPassword = [
+  body("token").trim().notEmpty().withMessage("token is required"),
+  body("newPassword")
+    .isLength({ min: 8, max: 16 })
+    .withMessage("password must be between 8 and 16 characters in length")
+    .isStrongPassword({
+      minLowercase: 1,
+      minUppercase: 1,
+      minSymbols: 1,
+      minNumbers: 1,
+    })
+    .withMessage(
+      "password should include at least one uppercase letter, one lowercase letter, one special symbol, and one numerical digit.",
+    ),
+];
+
 export class UserRoutes {
   private basePoint = "/api/users";
   constructor(app: Express) {
@@ -78,5 +110,18 @@ export class UserRoutes {
     app
       .route("/api/refresh_token")
       .post(controller.getAccessTokenFromRefreshToken);
+
+    app
+      .route(this.basePoint + "/change_password/:id")
+      .all(authorize)
+      .patch(validate(validChangePassword), controller.changePassword);
+
+    app
+      .route(this.basePoint + "/forgot_password")
+      .post(controller.forgotPassword);
+
+    app
+      .route(this.basePoint + "/reset_password")
+      .post(validate(validateResetPassword), controller.resetPassword);
   }
 }
