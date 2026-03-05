@@ -39,6 +39,28 @@ export class UsersUtil {
     }
     return null;
   }
+  public static async checkValidUserIDs(user_ids: string[]) {
+    const userService = new UsersService();
+
+    const users = await userService.findByIds(user_ids);
+
+    return users.data?.length === user_ids.length;
+  }
+  public static async getUsernamesByID(user_ids: string[]) {
+    const userService = new UsersService();
+    const queryResult = await userService.findByIds(user_ids);
+    if (queryResult.statusCode === 200) {
+      const users = queryResult.data;
+      const usernames = users?.map((i) => {
+        return {
+          username: i.username,
+          user_id: i.user_id,
+        };
+      });
+      return usernames;
+    }
+    return [];
+  }
 }
 
 export class UserController extends BaseController {
@@ -198,6 +220,7 @@ export class UserController extends BaseController {
       res
         .status(404)
         .send({ statusCode: 404, status: "error", message: "user not found" });
+      return;
     }
 
     const user = findUserResult.data;
@@ -208,6 +231,7 @@ export class UserController extends BaseController {
         status: "error",
         message: "users can only change their own passwords",
       });
+      return;
     }
 
     const comparePasswords = await bcryptCompare(
@@ -221,6 +245,7 @@ export class UserController extends BaseController {
         status: "error",
         message: "old password doesn't match",
       });
+      return;
     }
     const newEncryptedPassword = await encryptString(newPassword);
 
@@ -234,6 +259,7 @@ export class UserController extends BaseController {
         status: "success",
         message: "password changed successfully",
       });
+      return;
     } else {
       res.status(result.statusCode as number).json(result);
     }
@@ -247,6 +273,7 @@ export class UserController extends BaseController {
       res
         .status(400)
         .json({ statusCode: 400, status: "error", message: "invalid email" });
+      return;
     }
 
     const user: Users = (await UsersUtil.getUserByEmail(email)) as Users;
@@ -254,6 +281,7 @@ export class UserController extends BaseController {
       res
         .status(404)
         .json({ statusCode: 404, status: "error", message: "user not found" });
+      return;
     }
 
     loadEnvFile();
@@ -322,13 +350,11 @@ export class UserController extends BaseController {
     try {
       const user = await UsersUtil.getUserByEmail(email);
       if (!user) {
-        res
-          .status(404)
-          .json({
-            statusCode: 404,
-            status: "error",
-            message: "user not found",
-          });
+        res.status(404).json({
+          statusCode: 404,
+          status: "error",
+          message: "user not found",
+        });
         return;
       }
 
