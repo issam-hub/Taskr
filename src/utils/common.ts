@@ -56,3 +56,11 @@ export const SERVER_CONST = {
   ACCESS_TOKEN_EXPIRY_TIME_SECONDS: 1 * 8 * 60 * 60, // 8 hours
   REFRESH_TOKEN_EXPIRY_TIME_SECONDS: 5 * 7 * 24 * 60 * 60, // one week
 };
+
+export const checkValidDate = (value: string): boolean => {
+  const regex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+  if (!regex.test(value)) return false;
+
+  const date = new Date(value.replace(" ", "T"));
+  return !isNaN(date.getTime());
+};
