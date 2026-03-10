@@ -156,6 +156,7 @@ export class UserController extends BaseController {
       }
       const accessToken: string = jwt.sign(
         {
+          user_id: user?.user_id as string,
           email: user?.email as string,
           username: user?.username as string,
         },
@@ -166,6 +167,7 @@ export class UserController extends BaseController {
       );
       const refreshToken: string = jwt.sign(
         {
+          user_id: user?.user_id as string,
           email: user?.email as string,
           username: user?.username as string,
         },

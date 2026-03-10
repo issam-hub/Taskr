@@ -46,10 +46,10 @@ export class Tasks {
   @Column()
   estimated_end_time: Date;
 
-  @Column()
+  @Column({ nullable: true })
   actual_start_time: Date;
 
-  @Column()
+  @Column({ nullable: true })
   actual_end_time: Date;
 
   @Column({

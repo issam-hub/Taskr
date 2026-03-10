@@ -5,6 +5,7 @@ import { Users } from "../components/users/entity.js";
 import { Projects } from "../components/projects/entity.js";
 import { Comments } from "../components/comments/entity.js";
 import { Tasks } from "../components/tasks/entity.js";
+import { Files } from "../components/files/entity.js";
 
 export class ConnectDatabase {
   private static connection: DataSource | null = null;
@@ -37,7 +38,7 @@ export class ConnectDatabase {
           username: USERNAME as string,
           password: PASSWORD as string,
           database: DBNAME as string,
-          entities: [Roles, Users, Projects, Comments, Tasks],
+          entities: [Roles, Users, Projects, Comments, Tasks, Files],
           synchronize: true,
           logging: false,
         });
