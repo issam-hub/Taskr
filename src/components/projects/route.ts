@@ -85,12 +85,13 @@ export class ProjectRoutes {
 
     app
       .route(this.basePoint + "/:id")
-      .delete(hasPermission("delete_user"), controller.deleteHandler)
+      .all(authorize)
+      .delete(hasPermission("delete_project"), controller.deleteHandler)
       .patch(
         validate(validProjectInputPatch),
-        hasPermission("edit_user"),
+        hasPermission("edit_project"),
         controller.updateHandler,
       )
-      .get(hasPermission("get_details_user"), controller.getOneHandler);
+      .get(hasPermission("get_details_project"), controller.getOneHandler);
   }
 }

@@ -3,6 +3,16 @@ import type { Request, Response } from "express";
 import { ProjectsService } from "./service.js";
 import { UsersUtil } from "../users/controller.js";
 
+export class ProjectsUtil {
+  public static async checkValidProjectIds(project_ids: string[]) {
+    const projectService = new ProjectsService();
+
+    const projects = await projectService.findByIds(project_ids);
+
+    return projects.data?.length === project_ids.length;
+  }
+}
+
 export class ProjectController extends BaseController {
   public async addHandler(req: Request, res: Response) {
     try {
