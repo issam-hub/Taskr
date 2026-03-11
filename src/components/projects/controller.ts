@@ -2,6 +2,7 @@ import { BaseController } from "../../utils/base_controller.js";
 import type { Request, Response } from "express";
 import { ProjectsService } from "./service.js";
 import { UsersUtil } from "../users/controller.js";
+import { CacheUtil } from "../../utils/cache_utils.js";
 
 export class ProjectsUtil {
   public static async checkValidProjectIds(project_ids: string[]) {
@@ -51,23 +52,39 @@ export class ProjectController extends BaseController {
     res.status(result.statusCode as number).json(result);
   }
   public async getOneHandler(req: Request, res: Response) {
+    const projectFromCache = await CacheUtil.get(
+      "Project",
+      req.params.id as string,
+    );
+    if (projectFromCache) {
+      res
+        .status(200)
+        .json({ statusCode: 200, status: "success", data: projectFromCache });
+      return;
+    }
     const service = new ProjectsService();
     const result = await service.findOne(req.params.id as string);
     result["users"] = await UsersUtil.getUsernamesByID(
       result.data?.user_ids as string[],
     );
     delete (result.data as any).user_ids;
+    await CacheUtil.set("Project", req.params.id as string, result.data);
     res.status(result.statusCode as number).json(result);
   }
   public async updateHandler(req: Request, res: Response) {
     const project = req.body;
     const service = new ProjectsService();
     const result = await service.update(req.params.id as string, project);
+
+    CacheUtil.remove("Project", req.params.id as string);
     res.status(result.statusCode as number).json(result);
   }
   public async deleteHandler(req: Request, res: Response) {
     const service = new ProjectsService();
     const result = await service.delete(req.params.id as string);
+
+    CacheUtil.remove("Project", req.params.id as string);
+
     res.status(result.statusCode as number).json(result);
   }
 }

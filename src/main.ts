@@ -3,6 +3,8 @@ import { ExpressServer } from "./express_server.js";
 import { ConnectDatabase } from "./utils/db_utils.js";
 import { DefaultUtils } from "./utils/default_utils.js";
 import os from "os";
+import { CacheUtil } from "./utils/cache_utils.js";
+import { RolesUtil } from "./components/roles/controller.js";
 const numCPUs = os.cpus().length;
 const workerCount = process.env.NODE_ENV === "production" ? numCPUs : 2;
 
@@ -34,6 +36,12 @@ if (cluster.isPrimary) {
   const server = new ExpressServer();
 
   new ConnectDatabase();
+
+  new CacheUtil();
+
+  setTimeout(() => {
+    RolesUtil.cacheAllRoles();
+  }, 1000 * 10);
 
   process.on("uncaughtException", (error: Error) => {
     console.error(

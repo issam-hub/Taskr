@@ -25,18 +25,15 @@ export class Files {
   @Column()
   url: string;
 
-  @Column()
   @ManyToOne(() => Users, (userData) => userData.user_id)
   @JoinColumn({ name: "user_id" })
   created_by: string;
 
-  @Column({ nullable: true })
-  @ManyToOne(() => Tasks, (taskData) => taskData.task_id)
+  @ManyToOne(() => Tasks, (taskData) => taskData.task_id, { nullable: true })
   @JoinColumn({ name: "task_id" })
   task_id: string;
 
-  @Column({ nullable: true })
-  @ManyToOne(() => Comments, (commentData) => commentData.comment_id)
+  @ManyToOne(() => Comments, (commentData) => commentData.comment_id, { nullable: true })
   @JoinColumn({ name: "comment_id" })
   comment_id: string;
 
