@@ -11,6 +11,7 @@ import jwt from "jsonwebtoken";
 import type { Users } from "./entity.js";
 import { loadEnvFile } from "process";
 import { renderTemplate, sendMail } from "../../utils/email_util.js";
+import { CacheUtil } from "../../utils/cache_utils.js";
 
 export class UsersUtil {
   public static async getUserFromUsername(username: string) {
@@ -103,10 +104,19 @@ export class UserController extends BaseController {
     res.status(result.statusCode as number).json(result);
   }
   public async getOneHandler(req: Request, res: Response) {
+    const userFromCache = await CacheUtil.get("User", req.params.id as string);
+    if (userFromCache) {
+      res
+        .status(200)
+        .json({ statusCode: 200, status: "success", data: userFromCache });
+      return;
+    }
+
     const service = new UsersService();
     const result = await service.findOne(req.params.id as string);
     if (result.statusCode === 200) {
       delete (result.data as any).password;
+      await CacheUtil.set("User", req.params.id as string, result.data);
     }
     res.status(result.statusCode as number).json(result);
   }
@@ -121,6 +131,7 @@ export class UserController extends BaseController {
     const result = await service.update(req.params.id as string, user);
     if (result.statusCode === 200) {
       delete (result.data as any).password;
+      CacheUtil.remove("User", req.params.id as string);
     }
 
     res.status(result.statusCode as number).json(result);
@@ -128,6 +139,9 @@ export class UserController extends BaseController {
   public async deleteHandler(req: Request, res: Response) {
     const service = new UsersService();
     const result = await service.delete(req.params.id as string);
+
+    CacheUtil.remove("User", req.params.id as string);
+
     res.status(result.statusCode as number).json(result);
   }
   public async login(req: Request, res: Response) {

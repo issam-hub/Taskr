@@ -4,6 +4,7 @@ import { BaseController } from "../../utils/base_controller.js";
 import { Rights } from "../../utils/common.js";
 import { RolesService } from "./service.js";
 import type { Roles } from "./entity.js";
+import { CacheUtil } from "../../utils/cache_utils.js";
 
 export class RolesUtil {
   public static getAllPerimissionsFromRights(): string[] {
@@ -33,6 +34,20 @@ export class RolesUtil {
     rights = [...new Set(queryData.data?.rights)];
     return rights;
   }
+  public static async cacheAllRoles() {
+    const service = new RolesService();
+    const result = await service.findAll({});
+    if (result.statusCode === 200) {
+      const roles = result.data;
+      roles?.forEach(async (role) => {
+        await CacheUtil.set("Role", role.role_id, role);
+      });
+      console.log("all roles are cached");
+    } else {
+      console.error("error while caching all roles: ", result.message);
+      console.log(result);
+    }
+  }
 }
 
 export class RoleController extends BaseController {
@@ -40,6 +55,7 @@ export class RoleController extends BaseController {
     const role = req.body;
     const service = new RolesService();
     const result = await service.create(role as DeepPartial<Roles>);
+    CacheUtil.set("Role", result.data?.role_id as string, result.data);
     res.status(result.statusCode as number).json(result);
   }
   public async getAllHandler(req: Request, res: Response) {
@@ -60,12 +76,14 @@ export class RoleController extends BaseController {
 
     const service = new RolesService();
     const result = await service.update(id as string, role);
+    CacheUtil.remove("Role", req.params.id as string);
     res.status(result.statusCode as number).json(result);
   }
   public async deleteHandler(req: Request, res: Response) {
     const id = req.params.id;
     const service = new RolesService();
     const result = await service.delete(id as string);
+    CacheUtil.remove("Role", req.params.id as string);
     res.status(result.statusCode as number).json(result);
   }
 }
