@@ -1,9 +1,9 @@
-import { BaseController } from "../../utils/base_controller.js";
 import type { Request, Response } from "express";
 import { deleteFile, overrideFile, uploadFile } from "../../utils/multer.js";
 import { Files } from "./entity.js";
 import { FilesService } from "./service.js";
 import { TasksUtil } from "../tasks/controller.js";
+import { CommentsUtil } from "../comments/controller.js";
 
 export class FileUtils {
   public static getPublicId(secure_url: string): string {
@@ -12,57 +12,84 @@ export class FileUtils {
   }
 }
 
-export class FileController extends BaseController {
-  public async addHandler(req: Request, res: Response) {
-    try {
-      const { task_id } = req.body;
-      if (!task_id) {
-        res.status(400).json({
-          statusCode: 400,
-          status: "error",
-          message: "task ID is required",
-        });
+export class FileController {
+  public addHandler(resource: "task" | "comment") {
+    return async (req: Request, res: Response) => {
+      try {
+        const idField = resource === "task" ? "task_id" : "comment_id";
+        const resourceId = req.body[idField];
+        if (!resourceId) {
+          res.status(400).json({
+            statusCode: 400,
+            status: "error",
+            message: `${idField} is required`,
+          });
+          return;
+        }
+
+        if (resource === "task") {
+          const isValidTask = await TasksUtil.checkValidTasksIds([
+            resourceId as string,
+          ]);
+          if (!isValidTask) {
+            res.status(400).json({
+              statusCode: 400,
+              status: "error",
+              message: "invalid task_id",
+            });
+            return;
+          }
+        } else if (resource === "comment") {
+          const isValidComment = await CommentsUtil.checkValidCommentsIds([
+            resourceId as string,
+          ]);
+          if (!isValidComment) {
+            res.status(400).json({
+              statusCode: 400,
+              status: "error",
+              message: "invalid comment_id",
+            });
+            return;
+          }
+        }
+
+        const uploadedFile = await uploadFile(req);
+        const service = new FilesService();
+        const fileData = new Files();
+        fileData.file_name = uploadedFile.filename;
+        fileData.mime_type = uploadedFile.meme_type;
+        fileData.url = uploadedFile.url;
+        fileData.created_by = req?.user?.user_id ?? "";
+        if (resource === "task") {
+          fileData.task_id = resourceId;
+        } else if (resource === "comment") {
+          fileData.comment_id = resourceId;
+        }
+        const createdFile = await service.create(fileData);
+        res.status(201).json(createdFile);
+      } catch (error: any) {
+        res
+          .status(400)
+          .json({ statusCode: 400, status: "error", error: error.message });
       }
-      const isValidTask = await TasksUtil.checkValidTasksIds([
-        task_id as string,
-      ]);
-      if (!isValidTask) {
-        res.status(400).json({
-          statusCode: 400,
-          status: "error",
-          message: "invalid task_id",
-        });
+    };
+  }
+  public getAllHandler(resource: "task" | "comment") {
+    return async (req: Request, res: Response) => {
+      const service = new FilesService();
+      const idField = resource === "task" ? "task_id" : "comment_id";
+      const resourceId = req.params[idField];
+      const result = await service.customQuery(
+        `${idField} = '${resourceId}'`,
+      );
+      if (!result) {
+        res
+          .status(400)
+          .json({ statusCode: 400, status: "error", message: "files not found" });
         return;
       }
-
-      const uploadedFile = await uploadFile(req);
-      const service = new FilesService();
-      const fileData = new Files();
-      fileData.file_name = uploadedFile.filename;
-      fileData.mime_type = uploadedFile.meme_type;
-      fileData.url = uploadedFile.url;
-      fileData.created_by = req?.user?.user_id ?? "";
-      fileData.task_id = task_id;
-      const createdFile = await service.create(fileData);
-      res.status(201).json(createdFile);
-    } catch (error: any) {
-      res
-        .status(400)
-        .json({ statusCode: 400, status: "error", error: error.message });
-    }
-  }
-  public async getAllHandler(req: Request, res: Response) {
-    const service = new FilesService();
-    const result = await service.customQuery(
-      `task_id = '${req.params.task_id}'`,
-    );
-    if (!result) {
-      res
-        .status(400)
-        .json({ statusCode: 400, status: "error", message: "files not found" });
-      return;
-    }
-    res.status(200).json({ statusCode: 200, status: "success", data: result });
+      res.status(200).json({ statusCode: 200, status: "success", data: result });
+    };
   }
   public async getOneHandler(req: Request, res: Response) {
     try {
@@ -116,6 +143,7 @@ export class FileController extends BaseController {
       fileData.url = overridedFile.url;
       fileData.created_by = req?.user?.user_id ?? "";
       fileData.task_id = result.data?.task_id as string;
+      fileData.comment_id = result.data?.comment_id as string;
       const updatedFile = await service.update(id as string, fileData);
       res.status(200).json(updatedFile);
     } catch (error: any) {

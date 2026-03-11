@@ -8,9 +8,14 @@ export class FileRoutes {
   constructor(app: Express) {
     const controller = new FileController();
     app
-      .route(this.baseEndPoint)
+      .route(this.baseEndPoint + "/task")
       .all(authorize)
-      .post(fileUploadMiddleware, controller.addHandler);
+      .post(fileUploadMiddleware, controller.addHandler("task"));
+
+    app
+      .route(this.baseEndPoint + "/comment")
+      .all(authorize)
+      .post(fileUploadMiddleware, controller.addHandler("comment"));
 
     app
       .route(this.baseEndPoint + "/:id")
@@ -22,6 +27,11 @@ export class FileRoutes {
     app
       .route(this.baseEndPoint + "/task/:task_id")
       .all(authorize)
-      .get(controller.getAllHandler);
+      .get(controller.getAllHandler("task"));
+
+    app
+      .route(this.baseEndPoint + "/comment/:comment_id")
+      .all(authorize)
+      .get(controller.getAllHandler("comment"));
   }
 }

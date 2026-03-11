@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { Tasks } from "../tasks/entity.js";
 import { Users } from "../users/entity.js";
+import { Comments } from "../comments/entity.js";
 
 @Entity()
 export class Files {
@@ -29,10 +30,15 @@ export class Files {
   @JoinColumn({ name: "user_id" })
   created_by: string;
 
-  @Column()
+  @Column({ nullable: true })
   @ManyToOne(() => Tasks, (taskData) => taskData.task_id)
   @JoinColumn({ name: "task_id" })
   task_id: string;
+
+  @Column({ nullable: true })
+  @ManyToOne(() => Comments, (commentData) => commentData.comment_id)
+  @JoinColumn({ name: "comment_id" })
+  comment_id: string;
 
   @Column()
   @CreateDateColumn()
