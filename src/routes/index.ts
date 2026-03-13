@@ -6,6 +6,7 @@ import { ProjectRoutes } from "../components/projects/route.js";
 import { TaskRoutes } from "../components/tasks/route.js";
 import { CommentRoutes } from "../components/comments/route.js";
 import { FileRoutes } from "../components/files/route.js";
+import { NotificationRoutes } from "../components/notifications/route.js";
 
 export class Routes {
   public router: Router;
@@ -18,6 +19,7 @@ export class Routes {
       TaskRoutes,
       CommentRoutes,
       FileRoutes,
+      NotificationRoutes,
     ];
 
     for (const routeClass of routeClasses) {

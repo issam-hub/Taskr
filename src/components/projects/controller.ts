@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import { ProjectsService } from "./service.js";
 import { UsersUtil } from "../users/controller.js";
 import { CacheUtil } from "../../utils/cache_utils.js";
+import { NotificationUtils } from "../../utils/notification_utils.js";
 
 export class ProjectsUtil {
   public static async checkValidProjectIds(project_ids: string[]) {
@@ -30,6 +31,16 @@ export class ProjectController extends BaseController {
         return;
       }
       const result = await service.create(project);
+      if (result.status === "success" && result.data?.project_id) {
+        for (const id of project.user_ids) {
+          await NotificationUtils.send({
+            userId: id as string,
+            title: "Project Assigned",
+            message: `You have been assigned a new project: ${project.name}`,
+            channels: ["IN_APP"],
+          });
+        }
+      }
       res.status(result.statusCode as number).json(result);
     } catch (error: any) {
       console.error("error while adding user: ", error.message);

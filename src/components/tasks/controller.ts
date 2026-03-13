@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import { TasksService } from "./service.js";
 import { ProjectsUtil } from "../projects/controller.js";
 import { UsersUtil } from "../users/controller.js";
+import { NotificationUtils } from "../../utils/notification_utils.js";
 
 export class TasksUtil {
   public static async checkValidTasksIds(tasks_ids: string[]) {
@@ -45,6 +46,16 @@ export class TaskController extends BaseController {
       }
 
       const createdTask = await service.create(task);
+
+      if (createdTask.status === "success" && task.user_id) {
+        await NotificationUtils.send({
+          userId: task.user_id as string,
+          title: "New Task Assigned",
+          message: `You have been assigned a new task: ${task.name}`,
+          channels: ["IN_APP", "REALTIME"],
+        });
+      }
+
       res.status(201).json(createdTask);
     } catch (error: any) {
       console.error("error while creating task: ", error.message);
