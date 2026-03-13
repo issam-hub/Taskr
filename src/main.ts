@@ -5,6 +5,8 @@ import { DefaultUtils } from "./utils/default_utils.js";
 import os from "os";
 import { CacheUtil } from "./utils/cache_utils.js";
 import { RolesUtil } from "./components/roles/controller.js";
+import { setupNotificationWorker } from "./workers/queue_worker.js";
+import { initSocket } from "./utils/socket_utils.js";
 const numCPUs = os.cpus().length;
 const workerCount = process.env.NODE_ENV === "production" ? numCPUs : 2;
 
@@ -38,6 +40,10 @@ if (cluster.isPrimary) {
   new ConnectDatabase();
 
   new CacheUtil();
+
+  initSocket(ExpressServer.getHttpServer());
+
+  setupNotificationWorker();
 
   setTimeout(() => {
     RolesUtil.cacheAllRoles();

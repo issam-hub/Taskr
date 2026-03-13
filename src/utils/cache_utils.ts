@@ -1,7 +1,12 @@
+import { loadEnvFile } from "process";
 import * as redis from "redis";
 
+loadEnvFile();
+
 export class CacheUtil {
-  private static client = redis.createClient();
+  private static client = redis.createClient({
+    url: process.env.REDIS_URL as string,
+  });
   constructor() {
     CacheUtil.client.connect();
   }

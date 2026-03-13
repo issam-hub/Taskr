@@ -1,9 +1,12 @@
 import express from "express";
+import { createServer } from "http";
 import { loadEnvFile } from "process";
 import { Routes } from "./routes/index.js";
 
 export class ExpressServer {
   private static server;
+  private static httpServer;
+
   constructor() {
     try {
       loadEnvFile();
@@ -28,9 +31,17 @@ export class ExpressServer {
       console.log("server routes has been started");
     }
 
-    ExpressServer.server = app.listen(port, () => {
+    ExpressServer.httpServer = createServer(app);
+
+    ExpressServer.httpServer.listen(port, () => {
       console.log(`server running on port :${port} with pid ${process.pid}`);
     });
+
+    ExpressServer.server = ExpressServer.httpServer;
+  }
+
+  public static getHttpServer() {
+    return ExpressServer.httpServer;
   }
 
   public closeServer(): void {

@@ -6,6 +6,7 @@ import { Projects } from "../components/projects/entity.js";
 import { Comments } from "../components/comments/entity.js";
 import { Tasks } from "../components/tasks/entity.js";
 import { Files } from "../components/files/entity.js";
+import { Notifications } from "../components/notifications/entity.js";
 
 export class ConnectDatabase {
   private static connection: DataSource | null = null;
@@ -38,7 +39,7 @@ export class ConnectDatabase {
           username: USERNAME as string,
           password: PASSWORD as string,
           database: DBNAME as string,
-          entities: [Roles, Users, Projects, Comments, Tasks, Files],
+          entities: [Roles, Users, Projects, Comments, Tasks, Files, Notifications],
           synchronize: true,
           logging: false,
         });
