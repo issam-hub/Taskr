@@ -131,7 +131,7 @@ export class UserController extends BaseController {
     const result = await service.update(req.params.id as string, user);
     if (result.statusCode === 200) {
       delete (result.data as any).password;
-      CacheUtil.remove("User", req.params.id as string);
+      await CacheUtil.remove("User", req.params.id as string);
     }
 
     res.status(result.statusCode as number).json(result);
@@ -140,7 +140,7 @@ export class UserController extends BaseController {
     const service = new UsersService();
     const result = await service.delete(req.params.id as string);
 
-    CacheUtil.remove("User", req.params.id as string);
+    await CacheUtil.remove("User", req.params.id as string);
 
     res.status(result.statusCode as number).json(result);
   }

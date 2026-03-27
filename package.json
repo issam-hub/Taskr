@@ -11,7 +11,7 @@
   "type": "module",
   "main": "dist/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileURL } from \"node:url\"; register(\"ts-node/esm\", pathToFileURL(\"./\"));' node_modules/.bin/mocha 'src/**/*.spec.ts'",
     "build": "tsc",
     "start": "npm run build && nodemon"
   },
@@ -19,6 +19,7 @@
     "@socket.io/redis-adapter": "^8.3.0",
     "bcrypt": "^6.0.0",
     "bull": "^4.16.5",
+    "chai-http": "^5.1.2",
     "cloudinary": "^2.9.0",
     "express": "^5.2.1",
     "express-validator": "^7.3.1",
@@ -38,20 +39,26 @@
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/bull": "^3.15.9",
+    "@types/chai": "^5.2.3",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/mocha": "^10.0.10",
     "@types/multer": "^2.1.0",
     "@types/node": "^25.3.0",
     "@types/nodemailer": "^7.0.11",
     "@types/pg": "^8.16.0",
     "@types/redis": "^4.0.10",
+    "@types/sinon": "^21.0.0",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.56.0",
     "@typescript-eslint/parser": "^8.56.0",
+    "chai": "^6.2.2",
     "eslint": "^10.0.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
+    "mocha": "^11.7.5",
     "prettier": "^3.8.1",
+    "sinon": "^21.0.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }

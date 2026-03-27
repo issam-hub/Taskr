@@ -76,14 +76,14 @@ export class RoleController extends BaseController {
 
     const service = new RolesService();
     const result = await service.update(id as string, role);
-    CacheUtil.remove("Role", req.params.id as string);
+    await CacheUtil.remove("Role", req.params.id as string);
     res.status(result.statusCode as number).json(result);
   }
   public async deleteHandler(req: Request, res: Response) {
     const id = req.params.id;
     const service = new RolesService();
     const result = await service.delete(id as string);
-    CacheUtil.remove("Role", req.params.id as string);
+    await CacheUtil.remove("Role", req.params.id as string);
     res.status(result.statusCode as number).json(result);
   }
 }

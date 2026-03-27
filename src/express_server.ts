@@ -6,6 +6,7 @@ import { Routes } from "./routes/index.js";
 export class ExpressServer {
   private static server;
   private static httpServer;
+  public app;
 
   constructor() {
     try {
@@ -16,22 +17,22 @@ export class ExpressServer {
 
     const port = process.env.PORT ?? 3000;
 
-    const app = express();
+    this.app = express();
 
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
 
-    app.get("/ping", (req, res) => {
+    this.app.get("/ping", (req, res) => {
       res.send("pong");
     });
 
-    const routes = new Routes(app);
+    const routes = new Routes(this.app);
 
     if (routes) {
       console.log("server routes has been started");
     }
 
-    ExpressServer.httpServer = createServer(app);
+    ExpressServer.httpServer = createServer(this.app);
 
     ExpressServer.httpServer.listen(port, () => {
       console.log(`server running on port :${port} with pid ${process.pid}`);
@@ -47,7 +48,6 @@ export class ExpressServer {
   public closeServer(): void {
     ExpressServer.server.close(() => {
       console.log(`server closed`);
-      process.exit(0);
     });
   }
 }
