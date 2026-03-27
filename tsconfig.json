@@ -46,6 +46,10 @@
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
   },
+  "ts-node": {
+    "esm": true,
+    "transpileOnly": true
+  },
   "include": ["src/**/*.ts", "src/**/*.json"],
   "exclude": ["node_modules"],
   "files": ["node_modules/@types/node/index.d.ts"],

@@ -75,7 +75,7 @@ export class ProjectController extends BaseController {
     }
     const service = new ProjectsService();
     const result = await service.findOne(req.params.id as string);
-    result["users"] = await UsersUtil.getUsernamesByID(
+    (result.data as any).users = await UsersUtil.getUsernamesByID(
       result.data?.user_ids as string[],
     );
     delete (result.data as any).user_ids;
@@ -87,14 +87,14 @@ export class ProjectController extends BaseController {
     const service = new ProjectsService();
     const result = await service.update(req.params.id as string, project);
 
-    CacheUtil.remove("Project", req.params.id as string);
+    await CacheUtil.remove("Project", req.params.id as string);
     res.status(result.statusCode as number).json(result);
   }
   public async deleteHandler(req: Request, res: Response) {
     const service = new ProjectsService();
     const result = await service.delete(req.params.id as string);
 
-    CacheUtil.remove("Project", req.params.id as string);
+    await CacheUtil.remove("Project", req.params.id as string);
 
     res.status(result.statusCode as number).json(result);
   }

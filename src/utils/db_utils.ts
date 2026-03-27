@@ -10,6 +10,7 @@ import { Notifications } from "../components/notifications/entity.js";
 
 export class ConnectDatabase {
   private static connection: DataSource | null = null;
+  private static initPromise: Promise<DataSource> | null = null;
   private repos: Record<string, Repository<any>> = {};
   private static instance: ConnectDatabase;
 
@@ -25,32 +26,47 @@ export class ConnectDatabase {
     return ConnectDatabase.instance;
   }
 
-  private async connect() {
+  public async connect(): Promise<DataSource | any> {
     try {
       if (ConnectDatabase.connection) {
         return ConnectDatabase.connection;
-      } else {
-        loadEnvFile();
-        const { HOST, DBPORT, USERNAME, PASSWORD, DBNAME } = process.env;
-        const appDataSource = new DataSource({
-          type: "postgres",
-          host: HOST as string,
-          port: DBPORT as unknown as number,
-          username: USERNAME as string,
-          password: PASSWORD as string,
-          database: DBNAME as string,
-          entities: [Roles, Users, Projects, Comments, Tasks, Files, Notifications],
-          synchronize: true,
-          logging: false,
-        });
-
-        await appDataSource.initialize();
-        ConnectDatabase.connection = appDataSource;
-        console.log("connected to the database");
-        return ConnectDatabase.connection;
       }
+
+      if (!ConnectDatabase.initPromise) {
+        ConnectDatabase.initPromise = (async () => {
+          loadEnvFile();
+          const { HOST, DBPORT, USERNAME, PASSWORD, DBNAME } = process.env;
+          const appDataSource = new DataSource({
+            type: "postgres",
+            host: HOST as string,
+            port: DBPORT as unknown as number,
+            username: USERNAME as string,
+            password: PASSWORD as string,
+            database: DBNAME as string,
+            entities: [
+              Roles,
+              Users,
+              Projects,
+              Comments,
+              Tasks,
+              Files,
+              Notifications,
+            ],
+            synchronize: true,
+            logging: false,
+          });
+
+          await appDataSource.initialize();
+          ConnectDatabase.connection = appDataSource;
+          console.log("connected to the database");
+          return appDataSource;
+        })();
+      }
+
+      return await ConnectDatabase.initPromise;
     } catch (err) {
       console.error("error connecting to database: ", err);
+      ConnectDatabase.initPromise = null;
     }
   }
 
